@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great Number Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <style>
+        body{
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container{
+            font-size: 200%;
+            text-align: center;
+        }
+        h1{
+            font-size: 200%;
+        }
+        #guess{
+            margin: 0 auto 1em;
+            width:25%;
+        }
+        .guessBox{
+            font-size: 125%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            background-color: red;
+            width: 10em;
+            height: 10em;
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Great Number Game!</h1>
+        <p>I am thinking of a number between 1 and 100</p>
+        <p>
+            {% if session['guess_num']==0: %}
+                Take a Guess
+            {% elif session['guess_num']==1: %}
+                You've made 1 guess
+            {% elif session['guess_num']>=5: %}
+                Try again!
+            {% elif session['guess_num']>1 %}
+                You've made {{session['guess_num']}} guesses
+            {% endif %}
+        </p>
+        {% if session['guess']!=None: %}
+            {% if session['guess']=='high': %}
+                <div class="guessBox">
+                    <p>Too High</p>
+                </div>
+            {% elif session['guess']=='low': %}
+                <div class="guessBox">
+                    <p>Too Low</p>
+                </div>
+            {% elif session['guess']=='correct': %}
+                <div class="guessBox" style="background-color: green;">
+                    <p>
+                        Just right!<br>
+                        {{session['random_number']}} was the number</p>
+                    <a href="/reset" class="btn btn-lg btn-light">Play Again!</a>
+                </div>
+            {% elif session['guess']=='loss': %}
+                <div class="guessBox">
+                    <p>You lost!</p>
+                    <a href="/reset" class="btn btn-lg btn-light">Try Again!</a>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if session['guess']!='correct' and session['guess']!='loss': %}
+            <form class="mb-3" action='/guess' method="POST">
+                <input class="form-control" type="number" name="guess" id="guess" min="1" max="100" step="1" required aria-required="true" autofocus>
+                <input class="btn btn-success btn-lg" type="submit" value="Guess">
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
